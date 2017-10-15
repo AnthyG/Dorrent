@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <script>
+        if (typeof module === 'object') {
+            window.module = module;
+            module = undefined;
+        }
+    </script>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/jquery.hotkeys.min.js"></script>
+    <script src="./js/menu.js"></script>
+
+    <script>
+        if (window.module) module = window.module;
+    </script>
+
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="./css/MainFont.css" /> -->
+    <link rel="stylesheet" href="./css/Material_Icons.min.css" />
+
+    <link rel="stylesheet" type="text/css" href="./css/main.min.css" />
+
+    <title id="WIN_TITLE">Dorrent</title>
+</head>
+
+<body>
+    <div class="DRAGHEADER">
+        <div id="menu-bar-btns">
+            <button id="back-btn"><span><</span></button>
+            <button id="menu-btn"><span></span></button>
+            <button id="hideplayer-btn"><span>-</span></button>
+        </div>
+        <span>Dorrent</span>
+        <div id="title-bar-btns">
+            <button id="min-btn"><span></span></button>
+            <button id="max-btn"><span></span></button>
+            <button id="close-btn"><span></span></button>
+        </div>
+    </div>
+    <div id="mainmenu"></div>
+    <div id="main" class="container">
+        <ul id="tlist">
+            <li>
+                <h4 class="title">Torrent Name</h4>
+                <div class="metadata">
+                    <span class="status">Downloading</span><progress class="progress"></progress><span class="downloaded">0 B</span><span class="numpeers">0 peers</span><span class="downloadspeed">0 B</span>
+                </div>
+                <ul class="files">
+                    <li>File 1</li>
+                    <li>File 2</li>
+                    <li>File 3</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div id="player">
+        <video></video>
+        <div id="cntrls">
+            <div class="cntrls_cntnr container">
+                <div id="cntrls_timeline">
+                    <div class="cntrls_timeline_total"></div>
+                    <div id="cntrls_timeline_loadtime"></div>
+                    <div id="cntrls_timeline_cursortime"></div>
+                    <div id="cntrls_timeline_curtime"></div>
+                    <div id="cntrls_timeline_cursorbubble"></div>
+                </div>
+                <div class="cntrls_actions">
+                    <button id="cntrls_pp"></button>
+                    <span id="cntrls_curtime"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<div class="menu template">
+    <a href="#" class="menu-item template">Template</a>
+</div>
+
+<script src="http://momentjs.com/downloads/moment.min.js"></script>
+<script>
+    // You can also require other files to run in this process
+    require('./js/renderer.js')
+</script>
+
+</html>

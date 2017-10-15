@@ -1,0 +1,28 @@
+{
+    "name": "dorrent",
+    "version": "0.0.1",
+    "description": "A slick-looking Web-Torrent-based Torrent-client",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron main.js",
+        "startI": "npm install && electron main.js"
+    },
+    "keywords": [
+        "Electron",
+        "WebTorrent",
+        "Torrent",
+        "Client"
+    ],
+    "author": {
+        "name": "AnthyG"
+    },
+    "dependencies": {
+        "webtorrent": "^0.98.19",
+        "drag-drop": "^2.13.2"
+    },
+    "devDependencies": {
+        "electron": "^1.7.9",
+        "bourbon": "^4.3.4",
+        "bourbon-neat": "^1.9.0"
+    }
+}
