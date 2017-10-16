@@ -47,14 +47,48 @@ html {
         background-color: $color-t;
         border-color: $color-t;
     }
-    &.tintedbar .DRAGHEADER {
-        color: $color-bg;
-        background-color: $color-t;
-        border-color: $color-t;
+    &.tintedbar {
+        & .DRAGHEADER,
+        & #mainmenu {
+            color: $color-bg;
+            background-color: $color-t;
+            border-color: $color-t;
+        }
+        & .menu {
+            background-color: $color-t;
+        }
+        & .menu-item {
+            color: $color-bg;
+            &:hover {
+                background-color: lighten($color-t, $prcnt1);
+            }
+            &:active,
+            &:focus {
+                background-color: $color-a;
+                color: $color-t;
+            }
+        }
+        & input.menu-item {
+            background-color: lighten($color-t, $prcnt2);
+        }
     }
     &.bordered,
-    &.bordered .DRAGHEADER {
-        border-color: #e91e63;
+    &.bordered .DRAGHEADER,
+    &.bordered #mainmenu {
+        border-color: $color-a;
+    }
+}
+
+#mainmenu {
+    top: 2.4rem;
+    border: 1px solid $color-bg;
+    border-top: 0;
+    height: calc(100% - 2.4rem);
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    &:not(.visible) {
+        transform: translate(-30px, 0px);
     }
 }
 
@@ -76,11 +110,15 @@ html {
     -ms-user-select: none;
     user-select: none;
     border: 1px solid $color-bg;
-    border-bottom: none;
+    // border-bottom: none; // I DON'T KNOW :?
 }
 
 html,
-.DRAGHEADER {
+.DRAGHEADER,
+#mainmenu,
+// .menu,
+// .menu-item
+{
     transition-property: background, color;
     transition: 0.7s cubic-bezier(0.46, 0.03, 0.52, 0.96);
 }
@@ -295,56 +333,59 @@ $cntrls-h2: $cntrls-h / 2;
         height: 100%;
     }
     & #cntrls {
-        width: calc(100% - 0.8rem);
-        position: fixed;
-        bottom: 0.4rem;
-        left: 0.4rem;
-        height: $cntrls-h * 2 + 0.2rem;
-        transition-property: all;
-        transition: 0.175s cubic-bezier(0.46, 0.03, 0.52, 0.96);
         opacity: 0;
+        left: 0.4rem;
+        bottom: 0.4rem;
+        position: fixed;
+        width: calc(100% - 0.8rem);
+        height: $cntrls-h * 2 + 0.2rem;
+        transition: all 0.175s cubic-bezier(0.46, 0.03, 0.52, 0.96);
         & .cntrls_cntnr {
             height: 100%;
-            background-color: rgba($color-bg, 0.1);
+            background-color: rgba($color-t, 0);
+            // background: -webkit-linear-gradient(rgba($color-t, 0), rgba($color-t, 0));
+            // background: -o-linear-gradient(rgba($color-t, 0), rgba($color-t, 0));
+            // background: -moz-linear-gradient(rgba($color-t, 0), rgba($color-t, 0));
+            // background: linear-gradient(rgba($color-t, 0), rgba($color-t, 0));
         }
         & #cntrls_timeline {
-            width: calc(100% - 0.8rem);
             float: left;
-            height: $cntrls-h + 1rem;
             margin: 0 0.4rem;
             position: relative;
             padding-top: 0.4rem;
+            height: $cntrls-h + 1rem;
+            width: calc(100% - 0.8rem);
             &>* {
                 position: absolute;
             }
             & .cntrls_timeline_total {
-                background-color: rgba($color-bg, 0.25);
-                height: $cntrls-h;
                 width: 100%;
+                height: $cntrls-h2;
+                background-color: rgba($color-bg, 0.25);
             }
             & #cntrls_timeline_loadtime {
+                height: $cntrls-h2;
                 background-color: rgba($color-bg, 0.5);
-                height: $cntrls-h;
             }
             & #cntrls_timeline_curtime {
+                height: $cntrls-h2;
                 background-color: rgba($color-a, 1.0);
-                height: $cntrls-h;
             }
             & #cntrls_timeline_cursortime {
-                background-color: rgba($color-bg, 0.5);
-                height: $cntrls-h;
                 display: none;
+                height: $cntrls-h2;
+                background-color: rgba($color-bg, 0.5);
             }
             & #cntrls_timeline_cursorbubble {
-                transform: translate(-2.4rem, -3.6rem);
                 height: 2.4rem;
                 width: 4.8rem;
-                border-radius: 0.2rem;
-                padding: 0.4rem;
-                text-align: center;
                 display: none;
+                padding: 0.4rem;
                 color: $color-bg;
+                text-align: center;
+                border-radius: 0.2rem;
                 background-color: rgba($color-t, 0.75);
+                transform: translate(-2.4rem, -3.6rem);
             }
         }
         & .cntrls_actions {
@@ -378,63 +419,93 @@ $cntrls-h2: $cntrls-h / 2;
                 }
             }
             & #cntrls_pp {
-                cursor: pointer;
-                border: 0;
-                background: transparent;
-                box-sizing: border-box;
                 width: 0;
+                border: 0;
+                cursor: pointer;
                 height: $cntrls-h*4;
-                border-color: transparent transparent transparent #FAFAFA;
-                transition: 100ms all ease;
                 border-style: solid;
+                box-sizing: border-box;
+                background: transparent;
+                transition: 100ms all ease;
                 border-width: $cntrls-h*2 0 $cntrls-h*2 $cntrls-h*2.5;
+                border-color: transparent transparent transparent #FAFAFA;
                 &.pause {
                     border-style: double;
                     border-width: 0px 0 0px $cntrls-h*2.5;
                 }
             }
             &>span {
-                margin: 0 $cntrls-h * 2;
                 float: left;
-                height: $cntrls-h * 4;
+                color: $color-bg;
                 text-align: center;
+                height: $cntrls-h * 4;
+                margin: 0 $cntrls-h * 2;
                 padding-top: $cntrls-h2;
             }
         }
-    }
-    &:not(.active) {
-        cursor: none;
-        & #cntrls {
-            height: $cntrls-h2 * 4 + 0.2rem;
+        height: 4.8rem; // Disable this, if you want 2 more actions.
+        &:hover {
+            height: 4.8rem;
             & .cntrls_cntnr {
-                background-color: rgba($color-bg, 0);
+                background-color: rgba($color-t, 0.45);
+                // background: -webkit-linear-gradient(rgba($color-t, 0.1), rgba($color-t, 0.9));
+                // background: -o-linear-gradient(rgba($color-t, 0.1), rgba($color-t, 0.9));
+                // background: -moz-linear-gradient(rgba($color-t, 0.1), rgba($color-t, 0.9));
+                // background: linear-gradient(rgba($color-t, 0.1), rgba($color-t, 0.9));
             }
-            & #cntrls_timeline {
-                height: $cntrls-h2 + 1rem;
+            & #cntrls_timeline:hover {
                 & .cntrls_timeline_total {
-                    height: $cntrls-h2;
+                    height: $cntrls-h;
                 }
                 & #cntrls_timeline_loadtime {
-                    height: $cntrls-h2;
+                    height: $cntrls-h;
                 }
                 & #cntrls_timeline_curtime {
-                    height: $cntrls-h2;
+                    height: $cntrls-h;
                 }
                 & #cntrls_timeline_cursortime {
-                    height: $cntrls-h2;
+                    height: $cntrls-h;
                 }
-            }
-            & .cntrls_actions {
-                bottom: -100%;
             }
         }
     }
-    &.active {
-        & #cntrls {
-            opacity: 1;
+}
+
+html {
+    &:not(.mouse_active) {
+        #player {
+            cursor: none;
+            & #cntrls {
+                height: $cntrls-h2 * 4 + 0.2rem;
+                & .cntrls_cntnr {
+                    background-color: rgba($color-bg, 0);
+                }
+                & #cntrls_timeline {
+                    height: $cntrls-h2 + 1rem;
+                    & .cntrls_timeline_total {
+                        height: $cntrls-h2;
+                    }
+                    & #cntrls_timeline_loadtime {
+                        height: $cntrls-h2;
+                    }
+                    & #cntrls_timeline_curtime {
+                        height: $cntrls-h2;
+                    }
+                    & #cntrls_timeline_cursortime {
+                        height: $cntrls-h2;
+                    }
+                }
+                & .cntrls_actions {
+                    bottom: -100%;
+                }
+            }
         }
-        & #cntrls:hover {
-            height: 4.8rem;
+    }
+    &.mouse_active {
+        #player {
+            & #cntrls {
+                opacity: 1;
+            }
         }
     }
 }
@@ -454,7 +525,12 @@ html.playing {
         right: 0;
         bottom: 0;
         display: block;
-        &:not(.active) {
+    }
+    &:not(.mouse_active) {
+        & .DRAGHEADER {
+            opacity: 0;
+        }
+        & #player {
             position: absolute;
         }
     }

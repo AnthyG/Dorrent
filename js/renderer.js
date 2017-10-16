@@ -26,7 +26,7 @@ function humanFileSize(bytes, si) {
 
 
 var player_seekTime,
-    player_active;
+    mouse_active;
 
 
 
@@ -55,6 +55,8 @@ var $cntrls_pp = $(cntrls_pp);
 
 var cntrls_curtime = $('#cntrls_curtime')[0];
 var $cntrls_curtime = $(cntrls_curtime);
+var cntrls_totaltime = $('#cntrls_totaltime')[0];
+var $cntrls_totaltime = $(cntrls_totaltime);
 
 
 
@@ -236,6 +238,15 @@ function player_start(torrentId) {
 
         $('html').addClass('playing');
 
+        $cntrls_curtime.text(elem.currentTime || '0:00');
+
+        var a = elem.duration / 60;
+        var b = a - Math.floor(a);
+        var c = b * 60;
+        var d = parseInt(c) || '00';
+        var e = parseInt(a) || '00';
+        $cntrls_totaltime.text(e + ':' + d);
+
         elem.volume = 0.025
     });
 }
@@ -277,20 +288,57 @@ $(document).on('ready', function() {
     });
 
     mainmenu = new Menu($('#menu-btn'));
-    mainmenu.addItem('Download "Sintel"', function() {
-        addTorrent('magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent');
+    mainmenu.elem.attr('id', 'mainmenu');
+
+    /*
+    $mm_themechanger = undefined;
+    var $mm_themechanger = mainmenu.addItem('Themechanger', function() {});
+    $mm_themechangerN = $('<div class="menu-item-list"></div>');
+    $mm_themechanger_1 = $('<a href="#" class="menu-item">Body</a>').appendTo($mm_themechangerN);
+    $mm_themechanger_1.on('click', function(e) {
+        $('html').toggleClass('dark');
     });
+    $mm_themechanger_2 = $('<a href="#" class="menu-item">Bar</a>').appendTo($mm_themechangerN);
+    $mm_themechanger_2.on('click', function(e) {
+        $('html').toggleClass('tintedbar');
+    });
+    $mm_themechanger_3 = $('<a href="#" class="menu-item">Border</a>').appendTo($mm_themechangerN);
+    $mm_themechanger_3.on('click', function(e) {
+        $('html').toggleClass('bordered');
+    });
+    $('<div class="menu-item-separator"></div>').insertAfter($mm_themechangerN);
+    $mm_themechanger.replaceWith($mm_themechangerN);
+    */
+
+    // mainmenu.addItem('Download "Sintel"', function() {
+    addTorrent('magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent');
+    // });
 
     $mm_input = undefined;
     var $mm_inputSet = mainmenu.addItem('Download', function() {
         addTorrent($mm_input.val());
         $mm_input.val('');
     });
-    console.log($mm_inputSet);
-    $mm_input = $('<input type="text" placeholder="input" />').insertBefore($mm_inputSet);
+    $mm_input = $('<input class="menu-item" type="text" placeholder="magnet-URI" />').insertBefore($mm_inputSet);
+
+    mainmenu.addItem('Settings', function() {
+        // $('html').addClass('settings');
+    });
 
     $('#menu-btn').on('click', function(e) {
         mainmenu.show();
+    });
+
+    // Delete the following 3 events,
+    // after the settings-page has been implemented!
+    $('#theme-dark-btn').on('click', function(e) {
+        $('html').toggleClass('dark');
+    });
+    $('#theme-tintedbar-btn').on('click', function(e) {
+        $('html').toggleClass('tintedbar');
+    });
+    $('#theme-bordered-btn').on('click', function(e) {
+        $('html').toggleClass('bordered');
     });
 
     dragDrop('body', function(files) {
@@ -298,10 +346,10 @@ $(document).on('ready', function() {
     });
 
     $(document).on('mousemove', function(e) {
-        $player.addClass('active');
-        clearTimeout(player_active);
-        player_active = setTimeout(function() {
-            $player.removeClass('active');
+        $('html').addClass('mouse_active');
+        clearTimeout(mouse_active);
+        mouse_active = setTimeout(function() {
+            $('html').removeClass('mouse_active');
         }, 4000);
     });
 

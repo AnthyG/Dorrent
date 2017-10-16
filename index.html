@@ -33,7 +33,16 @@
         <div id="menu-bar-btns">
             <button id="back-btn"><span><</span></button>
             <button id="menu-btn"><span></span></button>
+
             <button id="hideplayer-btn"><span>-</span></button>
+
+            <!--
+            Delete the following 3 buttons,
+            after the settings-page has been implemented!
+            -->
+            <button id="theme-dark-btn"><span>b</span></button>
+            <button id="theme-tintedbar-btn"><span>b</span></button>
+            <button id="theme-bordered-btn"><span>b</span></button>
         </div>
         <span>Dorrent</span>
         <div id="title-bar-btns">
@@ -42,10 +51,9 @@
             <button id="close-btn"><span></span></button>
         </div>
     </div>
-    <div id="mainmenu"></div>
     <div id="main" class="container">
         <ul id="tlist">
-            <li>
+            <!-- <li>
                 <h4 class="title">Torrent Name</h4>
                 <div class="metadata">
                     <span class="status">Downloading</span><progress class="progress"></progress><span class="downloaded">0 B</span><span class="numpeers">0 peers</span><span class="downloadspeed">0 B</span>
@@ -55,7 +63,7 @@
                     <li>File 2</li>
                     <li>File 3</li>
                 </ul>
-            </li>
+            </li> -->
         </ul>
     </div>
     <div id="player">
@@ -71,10 +79,13 @@
                 </div>
                 <div class="cntrls_actions">
                     <button id="cntrls_pp"></button>
-                    <span id="cntrls_curtime"></span>
+                    <span><span id="cntrls_curtime"></span>/<span id="cntrls_totaltime"></span></span>
                 </div>
             </div>
         </div>
+    </div>
+    <div id="settings">
+        <form></form>
     </div>
 </body>
 
