@@ -26,6 +26,7 @@ function humanFileSize(bytes, si) {
 
 
 var player_seekTime,
+    player_seekVolume,
     mouse_active;
 
 
@@ -38,9 +39,11 @@ var $player = $(player);
 playerV = $player.find('video')[0];
 $playerV = $(playerV);
 
+// START CONTROLS
 var cntrls = $('#cntrls')[0];
 var $cntrls = $(cntrls);
 
+// START TIMELINE
 var cntrls_timeline = $('#cntrls_timeline')[0];
 var $cntrls_timeline = $(cntrls_timeline);
 
@@ -49,7 +52,9 @@ var $cntrls_timeline_cursortime = $(cntrls_timeline_cursortime);
 
 var cntrls_timeline_cursorbubble = $('#cntrls_timeline_cursorbubble')[0];
 var $cntrls_timeline_cursorbubble = $(cntrls_timeline_cursorbubble);
+// END TIMELINE
 
+// START CONTROL-ACTIONS
 var cntrls_pp = $('#cntrls_pp')[0];
 var $cntrls_pp = $(cntrls_pp);
 
@@ -57,6 +62,20 @@ var cntrls_curtime = $('#cntrls_curtime')[0];
 var $cntrls_curtime = $(cntrls_curtime);
 var cntrls_totaltime = $('#cntrls_totaltime')[0];
 var $cntrls_totaltime = $(cntrls_totaltime);
+
+// START VOLUME
+var cntrls_volume = $('#cntrls_volume')[0];
+var $cntrls_volume = $(cntrls_volume);
+
+var cntrls_volume_current = $('#cntrls_volume_current')[0];
+var $cntrls_volume_current = $(cntrls_volume_current);
+
+var cntrls_volume_cursorbar = $('#cntrls_volume_cursorbar')[0];
+var $cntrls_volume_cursorbar = $(cntrls_volume_cursorbar);
+// END VOLUME
+// END CONTROL-ACTIONS
+
+// END CONTROLS
 
 
 
@@ -68,9 +87,13 @@ var onTorrent = function onTorrent(torrent_) {
 
         $ti.appendTo($tlist)
 
+        var $poster = $('<div class="poster"></div>').appendTo($ti);
+
         var $title = $('<h4 class="title">' + torrent.name + '</h4>').appendTo($ti);
         var $metadata = $('<div class="metadata"></div>').appendTo($ti);
         var $files = $('<ul class="files"></ul>').appendTo($ti);
+
+        var $playbtn = $('<button class="playbtn">Play</button>').appendTo($metadata);
 
         var $prbtn = $('<button class="prbtn">Pause/Resume</button>').appendTo($metadata);
 
@@ -89,8 +112,6 @@ var onTorrent = function onTorrent(torrent_) {
 
         var $md_timeremaining = $('<span class="timeremaining"></span>').appendTo($metadata);
 
-        var $playbtn = $('<button class="playbtn">Play</button>').appendTo($metadata);
-
         function torrentUpDown() {
             // console.log(torrent.downloadSpeed, torrent.uploadSpeed);
 
@@ -103,6 +124,13 @@ var onTorrent = function onTorrent(torrent_) {
         function torrentDone() {
             // console.log('Torrent with id ' + torrent.magnetURI + ' is finished');
             clearInterval(torrent.interval);
+
+            var posterFile = torrent.files.find(function(file) {
+                return file.name.startsWith('poster.');
+            });
+            console.log("POSTER", posterFile);
+
+            $poster.css("backgroundImage", "url(" + (torrent.path + (posterFile.path).replace(/\\/gm, "/") || "") + ")");
 
             $md_status.text('Not seeding');
 
@@ -208,11 +236,15 @@ var onTorrent = function onTorrent(torrent_) {
 }
 
 function addTorrent(torrentId) {
-    client.add(torrentId, onTorrent);
+    client.add(torrentId, {
+        path: "./TORRENTS/"
+    }, onTorrent);
 }
 
 function seedTorrent(files) {
-    client.seed(files, onTorrent);
+    client.seed(files, {
+        path: "./TORRENTS/"
+    }, onTorrent);
 }
 
 function player_start(torrentId) {
@@ -247,7 +279,7 @@ function player_start(torrentId) {
         var e = parseInt(a) || '00';
         $cntrls_totaltime.text(e + ':' + d);
 
-        elem.volume = 0.025
+        player_update_volume();
     });
 }
 
@@ -273,13 +305,23 @@ function player_pp() {
 
 function player_update_currentTime(t) {
     var t = t || 0;
+
     playerV.currentTime = t;
+
     playerV.paused ? (function() {
         player_pp();
         setTimeout(function() {
             player_pp();
         }, 0);
     })() : false;
+}
+
+function player_update_volume(v) {
+    var v = v || 0.025;
+
+    playerV.volume = v;
+
+    $cntrls_volume_current.css('width', (v * 100) + '%');
 }
 
 $(document).on('ready', function() {
@@ -400,8 +442,8 @@ $(document).on('ready', function() {
     $cntrls_timeline.on('mousemove', function(e) {
         var cursorPos = (e.clientX - (cntrls_timeline.getBoundingClientRect().left)) / (cntrls_timeline.offsetWidth);
 
+        var cP1 = cursorPos * 100;
         player_seekTime = cursorPos * playerV.duration;
-        cP1 = cursorPos * 100;
 
         $cntrls_timeline_cursortime.css('width', cP1 + '%');
         if (cP1 > 95) {
@@ -424,7 +466,26 @@ $(document).on('ready', function() {
     });
     $cntrls_timeline.on('click', function(e) {
         player_update_currentTime(player_seekTime);
-    })
+    });
+
+    $cntrls_volume.on('mouseenter', function(e) {
+        $cntrls_volume_cursorbar.css('display', 'block');
+    });
+    $cntrls_volume.on('mouseleave', function(e) {
+        $cntrls_volume_cursorbar.css('display', 'none');
+    });
+    $cntrls_volume.on('mousemove', function(e) {
+        var cursorPos = (e.clientX - (cntrls_volume.getBoundingClientRect().left)) / (cntrls_volume.offsetWidth);
+
+        var cP1 = cursorPos * 100;
+        player_seekVolume = 0 + cursorPos;
+
+        $cntrls_volume_cursorbar.css('width', cP1 + '%');
+    });
+    $cntrls_volume.on('click', function(e) {
+        console.log(player_seekVolume);
+        player_update_volume(player_seekVolume);
+    });
 });
 
 (function() {
